@@ -16,12 +16,13 @@ router.get('/cards', async (req, res) => {
   }
 });
 
-router.get('/cards/:id', async (req, res) => {
-  // A client may request a card so that is why we check
-  // for an accept-language header
+router.get('/cards/:slug', async (req, res) => {
   try {
-    const locale = langUtil.parse(req.headers['accept-language']);
-    const data = await Card.findByIdAndLocale(req.params.id, locale);
+    const {slug} = req.params;
+    let [cardId, locale] = slug.split('-');
+    locale = locale.replace('_', '-');
+
+    const data = await Card.findByIdAndLocale(cardId, locale);
     if (data.rowCount === 0) {
       return res.sendStatus(404);
     }
@@ -31,27 +32,40 @@ router.get('/cards/:id', async (req, res) => {
   }
 });
 
-router.post('/cards/locale/:localeId', validate(cardSchema), async (req, res) => {
+router.post('/cards/:slug', validate(cardSchema), async (req, res) => {
   try {
-    const {localeId} = req.params;
+    const {slug} = req.params;
+    let [cardId, locale] = slug.split('-');
+    locale = locale.replace('_', '-');
+
     const {question, answer} = req.body;
-    const data = await Card.create(localeId, question, answer);
+    const data = await Card.create(cardId, locale, question, answer);
     return res.status(201).json(data.rows[0]);
   } catch (error) {
     return res.status(500).json({'msg': error.toString()});
   }
 });
 
-router.post('/cards/:id/locale/:localeId', validate(cardSchema), async (req, res) => {
-  try {
-    const {id, localeId} = req.params;
-    const {question, answer} = req.body;
-    const data = await Card.createLocalizedCard(id, localeId, question, answer);
-    return res.status(201).json(data.rows[0]);
-  } catch (error) {
-    console.log(error)
-    return res.status(500).json({'msg': error.toString()});
-  }
-});
+// router.post('/cards/locale/:localeId', validate(cardSchema), async (req, res) => {
+//   try {
+//     const {localeId} = req.params;
+//     const {question, answer} = req.body;
+//     const data = await Card.create(localeId, question, answer);
+//     return res.status(201).json(data.rows[0]);
+//   } catch (error) {
+//     return res.status(500).json({'msg': error.toString()});
+//   }
+// });
+
+// router.post('/cards/:id/locale/:localeId', validate(cardSchema), async (req, res) => {
+//   try {
+//     const {id, localeId} = req.params;
+//     const {question, answer} = req.body;
+//     const data = await Card.createLocalizedCard(id, localeId, question, answer);
+//     return res.status(201).json(data.rows[0]);
+//   } catch (error) {
+//     return res.status(500).json({'msg': error.toString()});
+//   }
+// });
 
 module.exports = router;

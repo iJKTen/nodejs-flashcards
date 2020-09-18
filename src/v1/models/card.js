@@ -24,20 +24,23 @@ async function findByIdAndLocale(id, locale) {
   }
 }
 
-async function create(localeId, question, answer) {
-  return await db.query(`INSERT INTO cards (locale_id, question, answer) 
-  VALUES ($1, $2, $3) RETURNING *;`, [localeId, question, answer]);
-}
+// async function create(localeId, question, answer) {
+//   return await db.query(`INSERT INTO cards (locale_id, question, answer) 
+//   VALUES ($1, $2, $3) RETURNING *;`, [localeId, question, answer]);
+// }
 
-async function createLocalizedCard(cardId, localeId, question, answer) {
+async function create(cardId, locale, question, answer) {
+  if (cardId === '') {
+    return await db.query(`INSERT INTO cards (locale_id, question, answer) 
+    VALUES ((select id from locales where locale = $1), $2, $3) RETURNING *;`, [locale, question, answer]);
+  }
   return await db.query(`INSERT INTO cards (id, locale_id, question, answer) 
-  VALUES ($1, $2, $3, $4) RETURNING *;`, [cardId, localeId, question, answer]);
+  VALUES ($1, (select id from locales where locale = $2), $3, $4) RETURNING *;`, [cardId, locale, question, answer]);
 }
 
 module.exports = {
   all,
   findById,
   findByIdAndLocale,
-  create,
-  createLocalizedCard
+  create
 };
