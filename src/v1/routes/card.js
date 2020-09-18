@@ -3,7 +3,7 @@
 // eslint-disable-next-line new-cap
 const router = require('express').Router();
 const Card = require('../models/card');
-const langUtil = require('../../utils/locale-parse');
+const utils = require('../../utils/locale-parse');
 const validate = require('../schemas');
 const cardSchema = require('../schemas/card');
 
@@ -19,8 +19,7 @@ router.get('/cards', async (req, res) => {
 router.get('/cards/:slug', async (req, res) => {
   try {
     const {slug} = req.params;
-    let [cardId, locale] = slug.split('-');
-    locale = locale.replace('_', '-');
+    const [cardId, locale] = utils.parseCardLocaleFromSlug(slug);
 
     const data = await Card.findByIdAndLocale(cardId, locale);
     if (data.rowCount === 0) {
@@ -35,8 +34,7 @@ router.get('/cards/:slug', async (req, res) => {
 router.post('/cards/:slug', validate(cardSchema), async (req, res) => {
   try {
     const {slug} = req.params;
-    let [cardId, locale] = slug.split('-');
-    locale = locale.replace('_', '-');
+    const [cardId, locale] = utils.parseCardLocaleFromSlug(slug);
 
     const {question, answer} = req.body;
     const data = await Card.create(cardId, locale, question, answer);

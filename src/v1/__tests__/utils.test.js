@@ -1,11 +1,7 @@
 'use strict';
 
-const langUtil = require('../../utils/locale-parse');
+const utils = require('../../utils/locale-parse');
 
-test('Check english in US', () => {
-  expect(langUtil.parse('en-US')).toBe('en-US');
-});
-
-test('Locale will fail', () => {
-  expect(langUtil.parse('wrong')).toBeNull();
+test('Test valid slug', () => {
+  expect(utils.parseCardLocaleFromSlug('1-en_US')).toEqual([1, 'en-US']);
 });

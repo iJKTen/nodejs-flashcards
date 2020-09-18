@@ -30,7 +30,7 @@ async function findByIdAndLocale(id, locale) {
 // }
 
 async function create(cardId, locale, question, answer) {
-  if (cardId === '') {
+  if (cardId === 0) {
     return await db.query(`INSERT INTO cards (locale_id, question, answer) 
     VALUES ((select id from locales where locale = $1), $2, $3) RETURNING *;`, [locale, question, answer]);
   }
