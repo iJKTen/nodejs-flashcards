@@ -1,6 +1,6 @@
 # Getting Started
 
-Before you can run this application you will haveto confugure database access, create a new database login, create a new database and seed the newly created database.
+Before you can run this application you will have to confugure database access, create a new database login, create a new database and seed the newly created database.
 
 ## Update your pg_hba.conf file
 
@@ -42,20 +42,20 @@ The following routes for locales and cards can be found below
 
 GET /api/v1/locales
 
-### Get language by id
+### Get locale by id
 
 GET /api/v1/locales/:id
 
-### Create a new language
+### Create a new locale
 
 POST /api/v1/locales
-{"code":"de-CH"}
+{"locale":"de-CH"}
 
 ### Get all cards
 
 GET /api/v1/cards
 
-### Get a card by id with a language
+### Get a card by id with a locale
 
 GET /api/v1/cards/:id
 This route accepts Accept-Language header
@@ -72,7 +72,7 @@ POST /api/v1/cards/1/locale/5
 
 ## Tests
 
-Before you can run this application you will haveto confugure database access, create a new database login, create a new database and seed the newly created database.
+Before you can run tests you will have to confugure database access, create a new database login, create a new database and seed the newly created database.
 
 ## Update your pg_hba.conf file
 
