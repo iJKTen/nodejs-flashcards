@@ -7,7 +7,7 @@ const localizedCard = require('../models/localized_card');
 const validate = require('../schemas');
 const localizedCardSchema = require('../schemas/localized-card');
 
-router.get('/cards/:cardId/locales/:localeId', async (req, res) => {
+router.get('/cards/:cardId/localized_cards/:localeId', async (req, res) => {
   try {
     const data = await localizedCard.all(req.params.cardId, req.params.localeId);
     if (data.rowCount === 0) {
@@ -19,7 +19,7 @@ router.get('/cards/:cardId/locales/:localeId', async (req, res) => {
   }
 });
 
-router.post('/cards/:cardId/locales', validate(localizedCardSchema), async (req, res) => {
+router.post('/cards/:cardId/localized_cards', validate(localizedCardSchema), async (req, res) => {
   try {
     const {locale_id: localeId, question, answer} = req.body;
     const data = await localizedCard.create(req.params.cardId, localeId, question, answer);

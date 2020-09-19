@@ -44,7 +44,7 @@ test('Get localized cards', async () => {
 
 test('Get a card by locale', async () => {
   await request(app)
-      .get('/api/v1/cards/1/locales/1')
+      .get('/api/v1/cards/1/localized_cards/1')
       .send()
       .expect(200)
       .expect('Content-Type', /json/);
@@ -64,7 +64,7 @@ test('Create card', async () => {
 
 test('Create Localized Card', async () => {
   await request(app)
-      .post('/api/v1/cards/1/locales')
+      .post('/api/v1/cards/1/localized_cards')
       .set('Accept', 'application/json')
       .send({
         'question': 'Plutone ha un cuore su di esso quindi non può essere un pianeta nano, giusto?',
