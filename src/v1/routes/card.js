@@ -3,9 +3,6 @@
 // eslint-disable-next-line new-cap
 const router = require('express').Router();
 const Card = require('../models/card');
-const utils = require('../../utils/locale-parse');
-const validate = require('../schemas');
-const cardSchema = require('../schemas/card');
 
 router.get('/cards', async (req, res) => {
   try {
@@ -16,12 +13,9 @@ router.get('/cards', async (req, res) => {
   }
 });
 
-router.get('/cards/:slug', async (req, res) => {
+router.get('/cards/:id', async (req, res) => {
   try {
-    const {slug} = req.params;
-    const [cardId, locale] = utils.parseCardLocaleFromSlug(slug);
-
-    const data = await Card.findByIdAndLocale(cardId, locale);
+    const data = await Card.findById(req.params.id);
     if (data.rowCount === 0) {
       return res.sendStatus(404);
     }
@@ -30,40 +24,5 @@ router.get('/cards/:slug', async (req, res) => {
     return res.status(500).json({'msg': error.toString()});
   }
 });
-
-router.post('/cards/:slug', validate(cardSchema), async (req, res) => {
-  try {
-    const {slug} = req.params;
-    const [cardId, locale] = utils.parseCardLocaleFromSlug(slug);
-
-    const {question, answer} = req.body;
-    const data = await Card.create(cardId, locale, question, answer);
-    return res.status(201).json(data.rows[0]);
-  } catch (error) {
-    return res.status(500).json({'msg': error.toString()});
-  }
-});
-
-// router.post('/cards/locale/:localeId', validate(cardSchema), async (req, res) => {
-//   try {
-//     const {localeId} = req.params;
-//     const {question, answer} = req.body;
-//     const data = await Card.create(localeId, question, answer);
-//     return res.status(201).json(data.rows[0]);
-//   } catch (error) {
-//     return res.status(500).json({'msg': error.toString()});
-//   }
-// });
-
-// router.post('/cards/:id/locale/:localeId', validate(cardSchema), async (req, res) => {
-//   try {
-//     const {id, localeId} = req.params;
-//     const {question, answer} = req.body;
-//     const data = await Card.createLocalizedCard(id, localeId, question, answer);
-//     return res.status(201).json(data.rows[0]);
-//   } catch (error) {
-//     return res.status(500).json({'msg': error.toString()});
-//   }
-// });
 
 module.exports = router;

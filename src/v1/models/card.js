@@ -4,43 +4,22 @@
 const db = require('./db');
 
 async function all() {
-  return await db.query(`select c.id, c.locale_id, l.locale, c.question, c.answer 
-      from cards c inner join locales l on l.id = c.locale_id;`);
+  return await db.query(`select lc.id, lc.card_id, lc.locale_id, l.locale, lc.question, lc.answer 
+    from localized_cards lc inner join locales l on l.id = lc.locale_id;`);
 }
 
 async function findById(id) {
-  return await db.query(`select c.id, c.locale_id, l.code, c.question, c.answer 
-  from cards c inner join locales l on l.id = c.locale_id
-      where c.id = $1;`, [id]);
+  return await db.query(`select lc.id, lc.card_id, lc.locale_id, l.locale, lc.question, lc.answer 
+  from localized_cards lc inner join locales l on l.id = lc.locale_id
+      where lc.card_id = $1;`, [id]);
 }
 
-async function findByIdAndLocale(id, locale) {
-  if (locale === null) {
-    return await findById(id);
-  } else {
-    return await db.query(`select c.id, c.locale_id, l.locale, c.question, c.answer 
-    from cards c inner join locales l on l.id = c.locale_id
-      where c.id = $1 and l.locale = $2;`, [id, locale]);
-  }
-}
-
-// async function create(localeId, question, answer) {
-//   return await db.query(`INSERT INTO cards (locale_id, question, answer) 
-//   VALUES ($1, $2, $3) RETURNING *;`, [localeId, question, answer]);
-// }
-
-async function create(cardId, locale, question, answer) {
-  if (cardId === 0) {
-    return await db.query(`INSERT INTO cards (locale_id, question, answer) 
-    VALUES ((select id from locales where locale = $1), $2, $3) RETURNING *;`, [locale, question, answer]);
-  }
-  return await db.query(`INSERT INTO cards (id, locale_id, question, answer) 
-  VALUES ($1, (select id from locales where locale = $2), $3, $4) RETURNING *;`, [cardId, locale, question, answer]);
+async function create() {
+  return await db.query('INSERT INTO cards DEFAULT VALUES RETURNING id;');
 }
 
 module.exports = {
   all,
   findById,
-  findByIdAndLocale,
   create
 };

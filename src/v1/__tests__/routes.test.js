@@ -34,33 +34,42 @@ test('Get all cards', async () => {
       .expect('Content-Type', /json/);
 });
 
-test('Get card by accept language', async () => {
+test('Get localized cards', async () => {
   await request(app)
-      .get('/api/v1/cards/1-en_US')
-      .set('Accept-Language', 'en-US')
+      .get('/api/v1/cards/1')
       .send()
       .expect(200)
       .expect('Content-Type', /json/);
 });
 
-test('Create card by locale', async () => {
+test('Get a card by locale', async () => {
   await request(app)
-      .post('/api/v1/cards/2-fr_CA')
-      .set('Accept', 'application/json')
-      .send({
-        'question': 'Ist Pluto ein Planet?',
-        'answer': 'Es ist ein Hund, aber für manche Menschen ist Hund ihr Planet.'
-      })
-      .expect(201);
+      .get('/api/v1/cards/1/locales/1')
+      .send()
+      .expect(200)
+      .expect('Content-Type', /json/);
 });
 
 test('Create card', async () => {
   await request(app)
-      .post('/api/v1/cards/0-en_US')
+      .post('/api/v1/cards')
+      .set('Accept', 'application/json')
+      .send({
+        'question': 'Ist Pluto ein Planet?',
+        'answer': 'Es ist ein Hund, aber für manche Menschen ist Hund ihr Planet.',
+        'locale_id': 3
+      })
+      .expect(201);
+});
+
+test('Create Localized Card', async () => {
+  await request(app)
+      .post('/api/v1/cards/1/locales')
       .set('Accept', 'application/json')
       .send({
         'question': 'Plutone ha un cuore su di esso quindi non può essere un pianeta nano, giusto?',
-        'answer': 'Proprio come tutti i cani, Plutone ha il cuore più grande!'
+        'answer': 'Proprio come tutti i cani, Plutone ha il cuore più grande!',
+        'locale_id': 3
       })
       .expect(201);
 });

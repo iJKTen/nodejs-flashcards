@@ -2,9 +2,10 @@
 
 const Joi = require('joi');
 
-const Card = Joi.object().keys({
+const LocalizedCard = Joi.object().keys({
+  locale_id: Joi.number().required(),
   question: Joi.string().required(),
   answer: Joi.string().required()
 });
 
-module.exports = Card;
+module.exports = LocalizedCard;

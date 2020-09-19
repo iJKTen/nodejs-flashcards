@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS localized_cards;
 DROP TABLE IF EXISTS cards;
 DROP TABLE IF EXISTS locales;
 
@@ -8,18 +9,31 @@ CREATE TABLE locales (
 );
 
 CREATE TABLE cards (
-  id SERIAL,
-  locale_id integer references locales,
-  question text NOT NULL,
-  answer text NOT NULL,
-  PRIMARY KEY (id, locale_id)
+  id SERIAL PRIMARY KEY
 );
 
-INSERT INTO locales (locale) VALUES ('en-US');
-INSERT INTO locales (locale) VALUES ('fr-CA');
+CREATE TABLE localized_cards (
+  id SERIAL PRIMARY KEY,
+  card_id INTEGER NOT NULL REFERENCES cards,
+  locale_id INTEGER NOT NULL REFERENCES locales,
+  question TEXT NOT NULL,
+  answer TEXT NOT NULL,
+  UNIQUE(card_id, locale_id)
+);
 
-INSERT INTO cards (locale_id, question, answer) 
-VALUES ((select id from locales where locale = 'en-US'), 'Is pluto a planet?', 'It is a dog but for some humans dog is their planet.');
+DO $$
+declare cardId integer;
+BEGIN
 
-INSERT INTO cards (id, locale_id, question, answer) 
-VALUES (1, (select id from locales where locale = 'fr-CA'), 'Pluton est-elle une planète?', 'C''est un chien mais pour certains humains, le chien est leur planète.');
+  INSERT INTO locales (locale) VALUES ('en-US');
+  INSERT INTO locales (locale) VALUES ('fr-CA');
+
+  INSERT INTO cards DEFAULT VALUES RETURNING id INTO cardId;
+
+  INSERT INTO localized_cards (card_id, locale_id, question, answer) 
+  VALUES (cardId, (select id from locales where locale = 'en-US'), 'Is pluto a planet?', 'It is a dog but for some humans dog is their planet.');
+
+  INSERT INTO localized_cards (card_id, locale_id, question, answer) 
+  VALUES (cardId, (select id from locales where locale = 'fr-CA'), 'Pluton est-elle une planète?', 'C''est un chien mais pour certains humains, le chien est leur planète.');
+
+END $$;
