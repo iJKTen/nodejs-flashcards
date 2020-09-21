@@ -1,22 +1,98 @@
-Welcome to the BigSpring Case-Study! 
+# Getting Started
 
-This project is designed to serve as a representative model of the end-to-end engineering process that we follow at BigSpring. 
+Before you can run this application you will have to confugure database access, create a new database login, create a new database and seed the newly created database.
 
-The project has the following phases:
+## Update your pg_hba.conf file
 
-1. You receive access to this repository, which contains this README and a [specification document](spec.md) that describes the project.
-2. We meet for 30m - 45m to discuss the specification document and resolve any questions.
-3. You spend a few hours independently working on code that aims to fulfill the specification document. This can be done either the day of your onsite interview or before, depending on logistics and time constraints.
-4. We meet for 1.5h to discuss the code you've written in an open-ended way: particular implementation choices you made, changing requirements, etc.
+Update your pg_hba.conf file with the following line
 
-Goals of this project:
+```
+local bigspring_casestudy_ijkten bigspring_casestudy_ijkten md5
+```
 
-1. We see how you work within a representative environment on representative problems.
-2. We see how you think and write code.
+## Create a new login and a database
 
-Non-goals of this project:
+Run the following commands by going into psql
 
-1. We do not expect code that fulfills all aspects of the spec! Please do not spend more than a day of your time on this. The intent is to understand how you think about problems and write code, not whether you can implement a spec end to end in limited time.
-2. We do not expect a production-ready code base. Please feel free to "cut corners" where appropriate: data persistence, infrastructure, and polished front-end design are all areas that could be ignored (or, focused on, if that's your thing!).
+```
+create role bigspring_casestudy_ijkten with login password 'bigspring_casestudy_ijkten';
+create database bigspring_casestudy_ijkten owner bigspring_casestudy_ijkten;
+```
 
-Reach out to arun@bigspring.io with any questions you have.
+Run the command below to populate the database
+
+```
+npm i
+npm run seed
+```
+
+## Running the application
+
+Run the following command to start the server
+
+```
+npm run dev
+```
+
+## Routes
+
+The following routes for locales and cards can be found below
+
+### Get all locales in use
+
+GET /api/v1/locales
+
+### Get locale by id
+
+GET /api/v1/locales/:id
+
+### Create a new locale
+
+POST /api/v1/locales
+{"locale":"de-CH"}
+
+### Get all cards
+
+GET /api/v1/cards
+
+### Get a card by id with a locale
+
+GET /api/v1/cards/:id
+This route accepts Accept-Language header
+
+### Create a card
+
+POST /api/v1/cards/locale/5
+{"question": "", "answer": ""}
+
+### Create a localized card
+
+POST /api/v1/cards/1/locale/5
+{"question": "", "answer": ""}
+
+## Tests
+
+Before you can run tests you will have to confugure database access, create a new database login, create a new database and seed the newly created database.
+
+## Update your pg_hba.conf file
+
+Update your pg_hba.conf file with the following line
+
+```
+local bigspring_casestudy_ijkten_test bigspring_casestudy_ijkten_test md5
+```
+
+## Create a new login and a database
+
+Run the following commands by going into psql
+
+```
+create role bigspring_casestudy_ijkten_test with login password 'bigspring_casestudy_ijkten_test';
+create database bigspring_casestudy_ijkten_test owner bigspring_casestudy_ijkten_test;
+```
+
+Run the command below to populate the database
+
+```
+npm t
+```
