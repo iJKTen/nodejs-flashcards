@@ -7,8 +7,8 @@
     "start": "node src/index.js",
     "dev": "NODE_ENV=development nodemon src/index.js",
     "seed": "NODE_ENV=development node db/seed.js",
-    "seed-test": "NODE_ENV=test node db/seed.js",
-    "test": "NODE_ENV=test npm run seed-test && jest --runInBand --detectOpenHandles"
+    "pretest": "NODE_ENV=test node db/seed.js",
+    "test": "NODE_ENV=test jest --runInBand --detectOpenHandles"
   },
   "jest": {
     "testEnvironment": "node"
