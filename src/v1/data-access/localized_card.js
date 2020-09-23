@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 'use strict';
 
-const db = require('../models/db');
+const db = require('../data-access/db');
 
 async function all(cardId, localeId) {
   return await db.query(`select lc.id, lc.card_id, lc.locale_id, l.locale, lc.question, lc.answer 

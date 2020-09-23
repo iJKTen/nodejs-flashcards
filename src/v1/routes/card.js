@@ -1,6 +1,6 @@
 'use strict';
 
-const Card = require('../models/card');
+const Card = require('../data-access/card');
 
 module.exports = {
   index: async (req, res) => {

@@ -1,6 +1,6 @@
 'use strict';
 
-const localizedCard = require('../models/localized_card');
+const localizedCard = require('../data-access/localized_card');
 
 module.exports = {
   show: async (req, res) => {

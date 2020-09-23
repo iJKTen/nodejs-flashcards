@@ -1,6 +1,6 @@
 'use strict';
 
-const Locale = require('../models/locale');
+const Locale = require('../data-access/locale');
 
 module.exports = {
   index: async (req, res) => {
