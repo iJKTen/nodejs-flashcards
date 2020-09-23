@@ -11,12 +11,14 @@ const localizedCard = require('./localized_card');
 router
     .get('/locales', Locale.index)
     .get('/locales/:id', Locale.show)
-    .post('/locales', validate(localeSchema), Locale.create)
+    .post('/locales', validate(localeSchema), Locale.create);
 
+router
     .get('/cards', Card.index)
     .get('/cards/:id', Card.show)
-    .post('/cards', Card.create)
+    .post('/cards', Card.create);
 
+router
     .get('/cards/:cardId/localized_cards/:localeId', localizedCard.show)
     .post('/cards/:cardId/localized_cards', localizedCard.create);
 
