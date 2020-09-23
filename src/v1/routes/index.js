@@ -4,18 +4,18 @@
 const router = require('express').Router();
 const validate = require('../schemas');
 const localeSchema = require('../schemas/locale');
-const language = require('./locale');
-const card = require('./card');
+const Locale = require('./locale');
+const Card = require('./card');
 const localizedCard = require('./localized_card');
 
 router
-    .get('/locales', language.index)
-    .get('/locales/:id', language.show)
-    .post('/locales', validate(localeSchema), language.create)
+    .get('/locales', Locale.index)
+    .get('/locales/:id', Locale.show)
+    .post('/locales', validate(localeSchema), Locale.create)
 
-    .get('/cards', card.index)
-    .get('/cards/:id', card.show)
-    .post('/cards', card.create)
+    .get('/cards', Card.index)
+    .get('/cards/:id', Card.show)
+    .post('/cards', Card.create)
 
     .get('/cards/:cardId/localized_cards/:localeId', localizedCard.show)
     .post('/cards/:cardId/localized_cards', localizedCard.create);
